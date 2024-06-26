@@ -16,8 +16,10 @@ const initialState = {
     exp: 0,
     maxExp: 100,
   },
-  mapTiles: [],
+  mapTiles: [], // 確保這個存在
   inventory: [],
+  quickSlots: [null, null, null, null, null],
+  equippedWeapon: null,
 };
 
 function gameReducer(state, action) {
@@ -34,22 +36,21 @@ function gameReducer(state, action) {
     case 'USE_SKILL':
       console.log(`使用技能 ${action.payload.skillIndex} 在位置 (${action.payload.x}, ${action.payload.y})`);
       return state;
-    case 'OPEN_CHEST':
-      console.log(`開啟位置 (${action.payload.x}, ${action.payload.y}) 的寶箱`);
-      return {
-        ...state,
-        mapTiles: state.mapTiles.map(tile => 
-          tile.x === action.payload.x && tile.y === action.payload.y
-            ? {...tile, type: 'grass'}
-            : tile
-        ),
-        inventory: [...state.inventory, '寶物']
-      };
-    case 'SET_MAP_TILES':
-      return {
-        ...state,
-        mapTiles: action.payload
-      };
+      case 'OPEN_CHEST':
+  return {
+    ...state,
+    mapTiles: state.mapTiles.map(tile => 
+      tile.x === action.payload.x && tile.y === action.payload.y
+        ? {...tile, type: 'grass'}
+        : tile
+    ),
+    inventory: [...state.inventory, action.payload.item]
+  };
+      case 'SET_MAP_TILES':
+        return {
+          ...state,
+          mapTiles: action.payload
+        };
     default:
       return state;
   }
@@ -72,3 +73,5 @@ export function useGame() {
   }
   return context;
 }
+
+111
